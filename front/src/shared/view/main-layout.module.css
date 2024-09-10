@@ -1,0 +1,25 @@
+.root {
+    min-height: 100vh !important;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+    color: #fff;
+}
+
+.content {
+    padding: 24px;
+}
+
+.bodyLayout {
+    flex-direction: row !important;
+}

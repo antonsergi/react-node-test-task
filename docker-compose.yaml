@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:16.4
+    restart: always
+    environment:
+      POSTGRES_DB: testtask
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    volumes:
+      - ./database/postgres:/var/lib/postgresql/data:cached
+    ports:
+      - '5432:5432'
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - '8090:8080'
+    command: [ "php", "-d", "post_max_size=500M", "-d", "upload_max_filesize=500M", "-S", "0.0.0.0:8080", "-t", "/var/www/html" ]
+  back:
+    build: ./back
+    restart: always
+    ports:
+      - '3040:3040'
+    volumes:
+      - ./back:/app
+      - /app/node_modules
+    depends_on:
+      - db
+  front:
+    build: ./front
+    restart: always
+    environment:
+      NODE_ENV: development
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./front:/app
+      - /app/.next
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    depends_on:
+      - back
